@@ -3,6 +3,7 @@
 %token IDENTIFICATEUR CONSTANTE VOID INT FOR WHILE IF ELSE SWITCH CASE DEFAULT
 %token BREAK RETURN PLUS MOINS MUL DIV LSHIFT RSHIFT BAND BOR LAND LOR LT GT 
 %token GEQ LEQ EQ NEQ NOT EXTERN GOTO
+
 %left PLUS MOINS
 %left MUL DIV
 %left LSHIFT RSHIFT
@@ -124,3 +125,9 @@ binary_comp	:
 	|	NEQ
 ;
 %%
+
+
+int main(void a){
+	yyparse();
+	fprintf(stdout, "No parse error");
+}

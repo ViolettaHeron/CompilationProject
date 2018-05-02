@@ -133,3 +133,8 @@ binary_comp	:
 	|	NEQ
 ;
 %%
+
+
+int main(void a){
+	yyparse();
+}

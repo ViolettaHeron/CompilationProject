@@ -16,55 +16,28 @@ IS                      (u|U|l|L)*
 %}
 
 %%
-"auto"                  { /* A completer */ }
-"break"                 { /* A completer */ }
-"case"                  { /* A completer */ }
-"char"                  { /* A completer */ }
-"const"                 { /* A completer */ }
-"continue"              { /* A completer */ }
-"default"               { /* A completer */ }
-"do"                    { /* A completer */ }
-"double"                { /* A completer */ }
-"else"                  { /* A completer */ }
-"enum"                  { /* A completer */ }
-"extern"                { /* A completer */ }
-"float"                 { /* A completer */ }
-"for"                   { /* A completer */ }
-"goto"                  { /* A completer */ }
-"if"                    { /* A completer */ }
-"int"                   { /* A completer */ }
-"long"                  { /* A completer */ }
-"register"              { /* A completer */ }
-"return"                { /* A completer */ }
-"short"                 { /* A completer */ }
-"signed"                { /* A completer */ }
-"sizeof"                { /* A completer */ }
-"static"                { /* A completer */ }
-"struct"                { /* A completer */ }
-"switch"                { /* A completer */ }
-"typedef"               { /* A completer */ }
-"union"                 { /* A completer */ }
-"unsigned"              { /* A completer */ }
-"void"                  { /* A completer */ }
-"volatile"              { /* A completer */ }
-"while"                 { /* A completer */ }
+"break"                 { return BREAK; }
+"case"                  { return CASE; }
+"extern"                { return EXTERN; }
+"int"                   { return INT; }
+"void"                  { return VOID; }
+"while"                 { return WHILE; }
+"for"                   { return FOR; }
+"if"                    { return IF; }
+"then"                  { return THEN; }
+"else"             		{ return ELSE; }
+"switch"                { return SWITCH; }
+"default"               { return DEFAULT; }
+"return"               	{ return RETURN; }
 
-{L}({L}|{D})*           { /* A completer */ }
 
-0[xX]{H}+{IS}?          { /* A completer */ }
-0{D}+{IS}?              { /* A completer */ }
-{D}+{IS}?               { /* A completer */ }
-L?'(\\.|[^\\'])+'       { /* A completer */ }
+{L}({L}|{D})*           { /* IDENTIFIER  */ }
 
-{D}+{E}{FS}?            { /* A completer */ }
-{D}*"."{D}+({E})?{FS}?  { /* A completer */ }
-{D}+"."{D}*({E})?{FS}?  { /* A completer */ }
+{D}+               		{ /* CONSTANTES  */ }
 
-L?\"(\\.|[^\\"])*\"     { /* A completer */ }
 
-"..."                   { /* A completer */ }
-">>="                   { /* A completer */ }
-"<<="                   { /* A completer */ }
+L?\"(\\.|[^\\"])*\"     { /* A completer " */ }
+
 "+="                    { /* A completer */ }
 "-="                    { /* A completer */ }
 "*="                    { /* A completer */ }
@@ -73,19 +46,23 @@ L?\"(\\.|[^\\"])*\"     { /* A completer */ }
 "&="                    { /* A completer */ }
 "^="                    { /* A completer */ }
 "|="                    { /* A completer */ }
-">>"                    { /* A completer */ }
-"<<"                    { /* A completer */ }
+
+">>"                    { return RSHIFT; }
+"<<"                    { return LSHIFT }
+
 "++"                    { /* A completer */ }
 "--"                    { /* A completer */ }
 "->"                    { /* A completer */ }
-"&&"                    { /* A completer */ }
-"||"                    { /* A completer */ }
-"<="                    { /* A completer */ }
-">="                    { /* A completer */ }
-"=="                    { /* A completer */ }
-"!="                    { /* A completer */ }
+
+"&&"                    { return LAND; }
+"||"                    { return LOR }
+
+"<="                    { return LEQ; }
+">="                    { return GEQ; }
+"=="                    { return EQ; }
+"!="                    { return NEQ; }
+"!"						{ return NOT; }
 
 [ \t\v\n\f]             { /* A completer */ }
 .                       { return yytext[0]; }
 %%
-
