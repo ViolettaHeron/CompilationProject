@@ -44,9 +44,10 @@ type	:
 		VOID
 	|	INT
 ;
-liste_parms	:	
-		liste_parms ',' parm
-	|	
+ liste_parms	: 
+ 		parm 
+ 	| 	liste_parms ',' parm 
+ 	| 
 ;
 parm	:	
 		INT IDENTIFICATEUR
@@ -100,9 +101,10 @@ expression	:
 	|	variable
 	|	IDENTIFICATEUR '(' liste_expressions ')'
 ;
-liste_expressions	:	
-		liste_expressions ',' expression
-	|
+liste_expressions	: 
+		expression 
+	| 	liste_expressions ',' expression 
+	| 
 ;
 condition	:	
 		NOT '(' condition ')'
@@ -137,4 +139,10 @@ binary_comp	:
 
 int main(void a){
 	yyparse();
+	fprintf(stdout, "No parse error");
+}
+
+void yyerror(char *s) {
+    fprintf(stderr, " line %d: %s\n", linenum, s);
+    exit(1);
 }
