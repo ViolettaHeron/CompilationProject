@@ -6,14 +6,24 @@ FS                      (f|F|l|L)
 IS                      (u|U|l|L)*
 
 %{
-#include <stdio.h>
-#include "y.tab.h"
+	#include <stdio.h>
+	#include "cfe.tab.h"
 
+	/* Ne gère pas les commentaires. A rajouter */
+	/* Supprimer les lignes dont vous n'avez pas besoin. */
 
-/* Ne gère pas les commentaires. A rajouter */
-/* Supprimer les lignes dont vous n'avez pas besoin. */
+	/*
+	COMMANDS TO RUN
 
+	bison -d -v cfe.y
+	flex ANSI-C.l
+	gcc lex.yyy.c cfe.tab.c -o outputFile -ll
+	./outputFile < add.c
+
+	*/
 %}
+
+%x IN_COMMENT
 
 %%
 "break"                 { return BREAK; }
@@ -38,24 +48,22 @@ IS                      (u|U|l|L)*
 
 L?\"(\\.|[^\\"])*\"     { /* A completer " */ }
 
-"+="                    { /* A completer */ }
-"-="                    { /* A completer */ }
-"*="                    { /* A completer */ }
-"/="                    { /* A completer */ }
-"%="                    { /* A completer */ }
-"&="                    { /* A completer */ }
-"^="                    { /* A completer */ }
-"|="                    { /* A completer */ }
+<INITIAL>{
+"/*"                    {  BEGIN(IN_COMMENT); }
+}
+<IN_COMMENT>{
+"*/"                    { BEGIN(INITIAL); }
+[^*\n]+                 // eat comment in chunks
+"*"                     // eat the lone star
+\n                      yylineno++;
+}
+
 
 ">>"                    { return RSHIFT; }
-"<<"                    { return LSHIFT }
-
-"++"                    { /* A completer */ }
-"--"                    { /* A completer */ }
-"->"                    { /* A completer */ }
+"<<"                    { return LSHIFT; }
 
 "&&"                    { return LAND; }
-"||"                    { return LOR }
+"||"                    { return LOR; }
 
 "<="                    { return LEQ; }
 ">="                    { return GEQ; }

@@ -125,9 +125,3 @@ binary_comp	:
 	|	NEQ
 ;
 %%
-
-
-int main(void a){
-	yyparse();
-	fprintf(stdout, "No parse error");
-}
