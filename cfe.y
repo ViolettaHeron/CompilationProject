@@ -123,10 +123,10 @@ binary_op	:
 	| MOINS
 	| MUL
 	| DIV
-	| LSHIFT
-	| RSHIFT
 	| BAND
 	| BOR
+	| LSHIFT
+	| RSHIFT
 ;
 binary_rel	:	
 	 LAND
@@ -143,7 +143,7 @@ binary_comp	:
 %%
 
 void yyerror(char const *s) {
-	fprintf(stderr, "%s on char : %c\n", s, yychar);
+	fprintf(stderr, "%s on char : %c \n", s, yychar);
 	exit(1);
 }
 

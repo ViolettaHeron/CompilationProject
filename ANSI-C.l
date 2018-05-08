@@ -10,16 +10,15 @@ IS                      (u|U|l|L)*
 	#include "cfe.tab.h"
 
 	/* Ne gère pas les commentaires. A rajouter */
-	/* Supprimer les lignes dont vous n'avez pas besoin. */
+	/* Supprimer les lignes dont vous n"avez pas besoin. */
 
 	/*
 	COMMANDS TO RUN
 
-	bison -d -v cfe.y
-	flex ANSI-C.l
-	gcc lex.yyy.c cfe.tab.c -o outputFile -ll
-	./outputFile < add.c
+	bison -d -v cfe.y && flex ANSI-C.l && gcc lex.yy.c cfe.tab.c -o outputFile -ll && ./outputFile < Tests/add.c
 
+	note : Doublequotes needed
+	
 	*/
 %}
 
@@ -40,24 +39,19 @@ IS                      (u|U|l|L)*
 "default"               { return DEFAULT; }
 "return"               	{ return RETURN; }
 
+{L}({L}|{D})*           { return IDENTIFICATEUR; }
 
-{L}({L}|{D})*           { /* IDENTIFIER  */ }
-
-{D}+               		{ /* CONSTANTES  */ }
-
-
-L?\"(\\.|[^\\"])*\"     { /* A completer " */ }
+{D}+               		{ return CONSTANTE; }
 
 <INITIAL>{
-"/*"                    {  BEGIN(IN_COMMENT); }
+	"/*"  				{  BEGIN(IN_COMMENT); }
 }
 <IN_COMMENT>{
-"*/"                    { BEGIN(INITIAL); }
-[^*\n]+                 // eat comment in chunks
-"*"                     // eat the lone star
-\n                      yylineno++;
+	"*/"  				{ BEGIN(INITIAL); }
+	[^*\n]+             // eat comment in chunks
+	"*"                 // eat the lone star
+	\n                  yylineno++;
 }
-
 
 ">>"                    { return RSHIFT; }
 "<<"                    { return LSHIFT; }
@@ -65,11 +59,20 @@ L?\"(\\.|[^\\"])*\"     { /* A completer " */ }
 "&&"                    { return LAND; }
 "||"                    { return LOR; }
 
-"<="                    { return LEQ; }
-">="                    { return GEQ; }
-"=="                    { return EQ; }
+"<="					{ return LEQ; }
+">="					{ return GEQ; }
+"=="					{ return EQ; }
 "!="                    { return NEQ; }
 "!"						{ return NOT; }
+
+"+" 					{ return PLUS; }
+"-" 					{ return MOINS; }
+"*" 					{ return MUL; }
+"/" 					{ return DIV; }
+"&" 					{ return BAND; }
+"|" 					{ return BOR; }
+"<" 					{ return LT; }
+">" 					{ return GT; }
 
 [ \t\v\n\f]             { /* A completer */ }
 .                       { return yytext[0]; }
