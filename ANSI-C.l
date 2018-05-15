@@ -39,8 +39,8 @@ IS                      (u|U|l|L)*
 "default"               { return DEFAULT; }
 "return"               	{ return RETURN; }
 
-{L}({L}|{D})*           { return IDENTIFICATEUR; }
-
+{L}({L}|{D})*           { yylval.nom_id = malloc(sizeof(yytext)); strncpy(yylval.nom_id, yytext,strlen(yytext)); return IDENTIFICATEUR; }
+ 
 {D}+               		{ return CONSTANTE; }
 
 <INITIAL>{

@@ -19,6 +19,12 @@
 %left OP
 %left REL
 %start programme
+%union {
+	char* nom_id;
+	int valeur;
+	char* code;
+}
+%type<nom_id> IDENTIFICATEUR;
 %%
 programme	:	
 	 liste_declarations liste_fonctions
@@ -39,7 +45,7 @@ liste_declarateurs	:
 	| declarateur
 ;
 declarateur	:	
-	 IDENTIFICATEUR
+	 IDENTIFICATEUR		{ printf("id:%s\n", $1); }
 	| declarateur '[' CONSTANTE ']'
 ;
 fonction	:	

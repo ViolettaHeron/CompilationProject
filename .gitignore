@@ -4,3 +4,4 @@ y.tab.*
 *.tab.h
 *.tab.c
 *.output
+outputFile
