@@ -1,3 +1,4 @@
+
 D                       [0-9]
 L                       [a-zA-Z_]
 H                       [a-fA-F0-9]
@@ -40,8 +41,7 @@ IS                      (u|U|l|L)*
 "return"               	{ return RETURN; }
 
 {L}({L}|{D})*           { yylval.nom_id = malloc(sizeof(yytext)); strncpy(yylval.nom_id, yytext,strlen(yytext)); return IDENTIFICATEUR; }
- 
-{D}+               		{ return CONSTANTE; }
+{D}+               		{ yylval.valeur = atoi(yytext); return CONSTANTE; }
 
 <INITIAL>{
 	"/*"  				{  BEGIN(IN_COMMENT); }
