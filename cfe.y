@@ -2,7 +2,6 @@
 	#include "simple.h"
 	bool error_syntaxical=false;
 	bool error_semantical=false;
-	int yylex();
 	/* Notre table de hachage */
 	GHashTable* table_variable;
 	
@@ -13,9 +12,6 @@
         char* type;
         GNode* value;
 	};
-
-	void yyerror(char const *s);
-	char* concatTab(char* str1, char* str2);
 
 %}
 
@@ -53,33 +49,13 @@
 %token<nombre>          TOK_NOMBRE
 %token			TOK_VRAI	/* true */
 %token			TOK_FAUX	/* false */
-
+%token			TOK_TYPEINT 	/* int */
 %token			TOK_AFFECT	/* = */
 %token			TOK_FINSTR	/* ; */
 %token			TOK_AFFICHER	/* afficher */
-%token<texte>           TOK_VARB        /* variable booleenne */
 %token<texte>           TOK_VARE        /* variable arithmetique */
-%token IDENTIFICATEUR CONSTANTE VOID INT FOR WHILE IF ELSE SWITCH CASE DEFAULT
-%token BREAK RETURN PLUS MOINS MUL DIV LSHIFT RSHIFT BAND BOR LAND LOR LT GT 
-%token GEQ LEQ EQ NEQ NOT EXTERN
-%left LSHIFT RSHIFT
-%left BOR BAND
+%token<texte> 		TOK_VARB	/* variable booleenne */
 
-%left OP
-%left REL
-
-%nonassoc THEN
-%nonassoc ELSE
-%start programme
-
-
-
-%type<liste_variables> declaration
-%type<liste_variables> liste_declarateurs
-%type<nom_id> declarateur
-
-%type<nom_id> IDENTIFICATEUR
-%type<valeur> CONSTANTE
 
 %%
 
@@ -126,21 +102,20 @@ variable_booleenne:     TOK_VARB{
                                 g_node_append_data($$,strdup($1));
                         };
  
-affectation:    variable_arithmetique TOK_AFFECT expression_arithmetique TOK_FINSTR{
+affectation:    
+		TOK_TYPEINT variable_arithmetique TOK_FINSTR{
                         /* $1 est la valeur du premier non terminal. Ici c'est la valeur du non terminal variable. $3 est la valeur du 2nd non terminal. */
-                        printf("\t\tAffectation sur la variable\n");
-                        Variable* var=g_hash_table_lookup(table_variable,(char*)g_node_nth_child($1,0)->data);
+                        printf("\t\tAllocation sur la variable\n");
+                        Variable* var=g_hash_table_lookup(table_variable,(char*)g_node_nth_child($2,0)->data);
                         if(var==NULL){
                                 /* On cree une Variable et on lui affecte le type que nous connaissons et la valeur */
                                 var=malloc(sizeof(Variable));
                                 if(var!=NULL){
                                         var->type=strdup("entier");
-                                        var->value=$3;
                                         /* On l'insere dans la table de hachage (cle: <nom_variable> / valeur: <(type,valeur)>) */
-                                        if(g_hash_table_insert(table_variable,g_node_nth_child($1,0)->data,var)){
+                                        if(g_hash_table_insert(table_variable,g_node_nth_child($2,0)->data,var)){
                                                 $$=g_node_new((gpointer)AFFECTATIONE);
-                                                g_node_append($$,$1);
-                                                g_node_append($$,$3);
+                                                g_node_append($$,$2);
                                         }else{
                                                 fprintf(stderr,"ERREUR - PROBLEME CREATION VARIABLE !\n");
                                                 exit(-1);
@@ -150,11 +125,24 @@ affectation:    variable_arithmetique TOK_AFFECT expression_arithmetique TOK_FIN
                                         exit(-1);
                                 }
                         }else{
-                                $$=g_node_new((gpointer)AFFECTATION);
-                                g_node_append_data($$,$1);
-                                g_node_append($$,$3);
+                                fprintf(stderr,"ERREUR - PROBLEME VARIABLE DEJA DECLARE !\n");
+                                exit(-1);
                         }
                 }
+		|
+		variable_arithmetique TOK_AFFECT expression_arithmetique TOK_FINSTR{
+			printf("\t\tAffectation sur la variable\n");
+			Variable* var=g_hash_table_lookup(table_variable,(char*)g_node_nth_child($1,0)->data);
+			if(var==NULL){
+				fprintf(stderr,"ERREUR - PROBLEME VARIABLE NON DECLAREE !\n");
+                                exit(-1);
+			}else{
+				var->value=$3;
+				$$=g_node_new((gpointer)AFFECTATION);
+                                g_node_append($$,$1);
+                                g_node_append($$,$3);
+			}
+		}
                 |
                 variable_booleenne TOK_AFFECT expression_booleenne TOK_FINSTR{
                         /* $1 est la valeur du premier non terminal. Ici c'est la valeur du non terminal variable. $3 est la valeur du 2nd non terminal. */
@@ -168,7 +156,7 @@ affectation:    variable_arithmetique TOK_AFFECT expression_arithmetique TOK_FIN
                                         var->value=$3;
                                         /* On l'insere dans la table de hachage (cle: <nom_variable> / valeur: <(type,valeur)>) */
                                         if(g_hash_table_insert(table_variable,g_node_nth_child($1,0)->data,var)){
-                                                $$=g_node_new((gpointer)AFFECTATIONE);
+                                                $$=g_node_new((gpointer)AFFECTATIONB);
                                                 g_node_append($$,$1);
                                                 g_node_append($$,$3);
                                         }else{
@@ -399,7 +387,7 @@ int main(int argc, char** argv){
 void yyerror(char *s) {
         fprintf(stderr, "Erreur de syntaxe a la ligne %d: %s\n", lineno, s);
 }
-
+/*
 char* concatTab(char* str1, char* str2){
 	char * new_str ;
 	int strsize = strlen(str1)+strlen(str2)+1;
@@ -411,3 +399,4 @@ char* concatTab(char* str1, char* str2){
 	}
 	return new_str;
 }
+*/
