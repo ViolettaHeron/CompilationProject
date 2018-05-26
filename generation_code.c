@@ -2,11 +2,8 @@
 
 void debut_code(){
 	fprintf(fichier, "extern int printd( int i );\n\n");
-	fprintf(fichier, "int main() {\n");
 }
-
 void fin_code(){
-	fprintf(fichier, "}\n");
 }
 
 void genere_code(GNode* ast){
@@ -16,6 +13,13 @@ void genere_code(GNode* ast){
 				genere_code(g_node_nth_child(ast,0));
 				genere_code(g_node_nth_child(ast,1));
 				break;
+			case BLOC_CODE:
+				genere_code(g_node_nth_child(ast,0));
+				break;
+			case PRINCIPAL:
+				genere_code(g_node_nth_child(ast,0));
+        			fprintf(fichier,"\n");
+        			break;
 			case VARIABLE:
 				fprintf(fichier,"%s",(char*)g_node_nth_child(ast,0)->data);
 				break;
@@ -95,6 +99,41 @@ void genere_code(GNode* ast){
 				fprintf(fichier,"(");
 				genere_code(g_node_nth_child(ast,0));
 				fprintf(fichier,")");
+				break;
+			case MAIN:
+				fprintf(fichier, "int main() {\n");
+				genere_code(g_node_nth_child(ast,0));
+				fprintf(fichier,"\t}\n");
+				break;
+			case EGALITE:
+        			genere_code(g_node_nth_child(ast,0));
+        			fprintf(fichier,"==");
+        			genere_code(g_node_nth_child(ast,1));
+        			break;
+			case DIFFERENT:
+        			genere_code(g_node_nth_child(ast,0));
+        			fprintf(fichier,"!=");
+        			genere_code(g_node_nth_child(ast,1));
+        			break;
+			case INFERIEUR:
+        			genere_code(g_node_nth_child(ast,0));
+        			fprintf(fichier,"<");
+        			genere_code(g_node_nth_child(ast,1));
+        			break;
+			case SUPERIEUR:
+        			genere_code(g_node_nth_child(ast,0));
+        			fprintf(fichier,">");
+        			genere_code(g_node_nth_child(ast,1));
+        			break;
+			case INFEGAL:
+        			genere_code(g_node_nth_child(ast,0));
+        			fprintf(fichier,"<=");
+				genere_code(g_node_nth_child(ast,1));
+				break;
+			case SUPEGAL:
+				genere_code(g_node_nth_child(ast,0));
+				fprintf(fichier,">=");
+				genere_code(g_node_nth_child(ast,1));
 				break;
 		}
 	}

@@ -5,6 +5,9 @@
 	/* Notre table de hachage */
 	GHashTable* table_variable;
 	
+/* Fonction de suppression des variables declarees a l'interieur d'un arbre syntaxique */
+void supprime_variable(GNode*);
+
 	/* Notre structure Variable qui a comme membre le type et un pointeur generique vers la valeur */
 	typedef struct Variable Variable;
 
@@ -27,13 +30,17 @@
 %left 			TOK_MUL 		TOK_DIV				/* /* */
 %left 			TOK_BAND						/* et  */
 %left 			TOK_BOR 		TOK_NOT				/* simble "ou" et not) */	
+%left 			TOK_EQ		TOK_NEQ		TOK_GT		TOK_LT		TOK_LEQ		TOK_GEQ			/* == , != , < , > , <= , >= */
 %right                  TOK_PARG        	TOK_PARD 			/* ()  */
 
 /* Nous avons la liste de nos expressions (les non terminaux). Nous les typons tous en noeud de l'arbre syntaxique (GNode*) */
 
 %type<noeud>            code
 %type<noeud>            instruction
+%type<noeud>            principal
 %type<noeud>            variable_arithmetique
+%type<noeud>            bloc_code
+%type<noeud>            fonction
 %type<noeud>            variable_booleenne
 %type<noeud>            affectation
 %type<noeud>            affichage
@@ -52,6 +59,9 @@
 %token			TOK_TYPEINT 	/* int */
 %token			TOK_AFFECT	/* = */
 %token			TOK_FINSTR	/* ; */
+%token 			TOK_MAIN	/* main */
+%token			TOK_ACCOLADEG	/* { */
+%token			TOK_ACCOLADED	/* } */
 %token			TOK_AFFICHER	/* afficher */
 %token<texte>           TOK_VARE        /* variable arithmetique */
 %token<texte> 		TOK_VARB	/* variable booleenne */
@@ -79,8 +89,20 @@ code:           %empty{$$=g_node_new((gpointer)CODE_VIDE);}
                         fprintf(stderr,"\tERREUR : Erreur de syntaxe a la ligne %d.\n",lineno);
                         error_syntaxical=true;
                 };
- 
-instruction:    affectation{
+
+bloc_code:      code{	
+			$$=g_node_new((gpointer)BLOC_CODE);
+			g_node_append($$,$1);
+			/*supprime_variable($1); *//* on efface toutes les variables declarees de la table de hachage a la sortie du bloc de code */
+                };
+
+instruction:    
+		fonction{
+			printf("\tFonction :\n");
+			$$=$1;
+		}
+		|
+		affectation{
                         printf("\tInstruction type Affectation\n");
                         $$=$1;
                 }
@@ -101,6 +123,17 @@ variable_booleenne:     TOK_VARB{
                                 $$=g_node_new((gpointer)VARIABLE);
                                 g_node_append_data($$,strdup($1));
                         };
+
+fonction: 	 principal TOK_ACCOLADED{
+			printf("\tPrincipal\n");
+			$$=g_node_new((gpointer)PRINCIPAL);
+			g_node_append($$,$1);
+		};
+
+principal:	TOK_TYPEINT TOK_MAIN TOK_PARG TOK_PARD TOK_ACCOLADEG bloc_code{
+			$$=g_node_new((gpointer)MAIN);
+			g_node_append($$,$6);
+		};
  
 affectation:    
 		TOK_TYPEINT variable_arithmetique TOK_FINSTR{
@@ -292,6 +325,48 @@ expression_booleenne:           TOK_VRAI{
                                         printf("\t\t\tC'est une expression booleenne entre parentheses\n");
                                         $$=g_node_new((gpointer)EXPR_PAR);
                                         g_node_append($$,$2);
+                                }
+				|
+                                expression_arithmetique TOK_EQ expression_arithmetique{
+                                        printf("\t\t\tOperateur d'egalite ==\n");
+                                        $$=g_node_new((gpointer)EGALITE);
+                                        g_node_append($$,$1);
+                                        g_node_append($$,$3);
+                                }
+                                |
+                                expression_arithmetique TOK_NEQ expression_arithmetique{
+                                        printf("\t\t\tOperateur d'inegalite !=\n");
+                                        $$=g_node_new((gpointer)DIFFERENT);
+                                        g_node_append($$,$1);
+                                        g_node_append($$,$3);
+                                }
+                                |
+                                expression_arithmetique TOK_GT expression_arithmetique{
+                                        printf("\t\t\tOperateur de superiorite >\n");
+                                        $$=g_node_new((gpointer)SUPERIEUR);
+                                        g_node_append($$,$1);
+                                        g_node_append($$,$3);
+                                }
+                                |
+                                expression_arithmetique TOK_LT expression_arithmetique{
+                                        printf("\t\t\tOperateur d'inferiorite <\n");
+                                        $$=g_node_new((gpointer)INFERIEUR);
+                                        g_node_append($$,$1);
+                                        g_node_append($$,$3);
+                                }
+                                |
+                                expression_arithmetique TOK_GEQ expression_arithmetique{
+                                        printf("\t\t\tOperateur >=\n");
+                                        $$=g_node_new((gpointer)SUPEGAL);
+                                        g_node_append($$,$1);
+                                        g_node_append($$,$3);
+                                }
+                                |
+                                expression_arithmetique TOK_LEQ expression_arithmetique{
+                                        printf("\t\t\tOperateur <=\n");
+                                        $$=g_node_new((gpointer)INFEGAL);
+                                        g_node_append($$,$1);
+                                        g_node_append($$,$3);
                                 };
  
 addition:       expression_arithmetique TOK_PLUS expression_arithmetique{
@@ -387,16 +462,21 @@ int main(int argc, char** argv){
 void yyerror(char *s) {
         fprintf(stderr, "Erreur de syntaxe a la ligne %d: %s\n", lineno, s);
 }
-/*
-char* concatTab(char* str1, char* str2){
-	char * new_str ;
-	int strsize = strlen(str1)+strlen(str2)+1;
 
-	if((new_str = malloc(strsize)) != NULL){
-	    memset(new_str, '\0', strsize);  
-	    strncat(new_str,str1, strlen(str1));
-	    strncat(new_str,str2, strlen(str2));
+void supprime_variable(GNode* ast){
+	if(ast&&!G_NODE_IS_LEAF(ast)&&(long)ast->data!=BLOC_CODE){
+		if((long)ast->data==AFFECTATIONB||(long)ast->data==AFFECTATIONE){
+			if(g_hash_table_remove(table_variable,(char*)g_node_nth_child(g_node_nth_child(ast,0),0)->data)){
+				printf("Variable supprimee !\n");
+			}else{
+				fprintf(stderr,"ERREUR - PROBLEME DE SUPPRESSION VARIABLE !\n");
+				exit(-1);
+			}
+		}else{
+			int nb_enfant;
+			for(nb_enfant=0;nb_enfant<=g_node_n_children(ast);nb_enfant++){
+				supprime_variable(g_node_nth_child(ast,nb_enfant));
+			}
+		}
 	}
-	return new_str;
 }
-*/

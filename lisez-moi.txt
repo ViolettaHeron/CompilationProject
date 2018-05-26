@@ -1,7 +1,7 @@
 sudo apt-get install libglib2.0-dev
 
 pour executer 
-flex -o ANSI-C.c ANSI-C.lex
+flex -o ANSI-C.c ANSI-C.l
 bison -d cfe.y
 gcc ANSI-C.c cfe.tab.c generation_code.c `pkg-config --cflags --libs glib-2.0` -o mongcc
 ./mongcc programme.simple

@@ -37,4 +37,13 @@ extern void fin_code(void);
 #define VRAI		16
 #define FAUX		17
 #define	EXPR_PAR	18
+#define	PRINCIPAL	19
+#define BLOC_CODE       20
+#define MAIN	        21
+#define EGALITE         22
+#define DIFFERENT       23
+#define SUPERIEUR       24
+#define INFERIEUR       25
+#define SUPEGAL         26
+#define INFEGAL         27
 

@@ -1,0 +1,17 @@
+int tb;
+tb=45;
+
+int main() {
+
+	int a;
+	int b;
+	int c;
+	int d;
+	a = 0;
+	b = 2;
+	c = a * b;
+	printd(b);
+	int autre;
+	autre = 3;
+	printd (autre > 3);
+}
