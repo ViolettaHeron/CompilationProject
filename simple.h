@@ -3,7 +3,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <glib.h>
-#include "cfe.tab.h"
+#include "syntaxe_simple.tab.h"
 int yylex(void);
 void yyerror(char*);
 extern unsigned int lineno;
@@ -37,13 +37,28 @@ extern void fin_code(void);
 #define VRAI		16
 #define FAUX		17
 #define	EXPR_PAR	18
-#define	PRINCIPAL	19
-#define BLOC_CODE       20
-#define MAIN	        21
-#define EGALITE         22
-#define DIFFERENT       23
-#define SUPERIEUR       24
-#define INFERIEUR       25
-#define SUPEGAL         26
-#define INFEGAL         27
+#define EGALITE         19
+#define DIFFERENT       20
+#define SUPERIEUR       21
+#define INFERIEUR       22
+#define SUPEGAL         23
+#define INFEGAL         24
+#define DANSII          25      /* inclus-inclus */
+#define DANSEI          26      /* exclus-inclus */
+#define DANSIE          27      /* inclus-exclus */
+#define DANSEE          28      /* exclus-exclus */
+#define CONDITION_SI    29
+#define CONDITION_SI_SINON 30
+#define SI          	31
+#define SINON       	32
+#define NEGATIF     	33
+#define BLOC_CODE     	34
+#define BOUCLE_FOR     	35
+#define BOUCLE_WHILE   	36
+#define VIRGULE   	37
+#define AFFECT   	38
+#define	PRINCIPAL	39
+#define MAIN	        40
+#define RET	        41
+#define EXT	        42
 
