@@ -1,0 +1,75 @@
+
+./Tests/add.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/break.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/compteur.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/cond.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/div.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/expr.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/functions.c
+	-- Succes a l'analyse lexicale ! --
+	-- Echec : Certaines phrases sont syntaxiquement incorrectes ! --
+	-- Echec a l'analyse syntaxique --
+./Tests/loops.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/lsh.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/mul.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/neg.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/printd.c
+	-- Echec : Certains lexemes ne font pas partie du lexique du langage ! --
+	-- Echec a l'analyse lexicale --
+	-- Echec : Certaines phrases sont syntaxiquement incorrectes ! --
+	-- Echec a l'analyse syntaxique --
+./Tests/rsh.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/sub.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/switch.c
+	-- Echec : Certains lexemes ne font pas partie du lexique du langage ! --
+	-- Echec a l'analyse lexicale --
+	-- Echec : Certaines phrases sont syntaxiquement incorrectes ! --
+	-- Echec a l'analyse syntaxique --
+./Tests/tableaux.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
+./Tests/tableaux-multi.c
+	-- Succes a l'analyse lexicale ! --
+	-- Echec : Certaines phrases sont syntaxiquement incorrectes ! --
+	-- Echec a l'analyse syntaxique --
+./Tests/variables.c
+	-- Succes a l'analyse lexicale ! --
+	-- Succes a l'analyse syntaxique ! --
+	-- Succes a l'analyse semantique ! --
