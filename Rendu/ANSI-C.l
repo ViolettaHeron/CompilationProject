@@ -7,6 +7,7 @@ bool error_lexical=false;
 %}
 
 %option noyywrap
+%x IN_COMMENT
 
 nombre 0|[1-9][[:digit:]]*
 variable_booleenne b(_|[[:alnum:]])*
@@ -44,7 +45,7 @@ variable_arithmetique ([[:alnum:]])*
 
 "switch"	{return TOK_SWITCH;}
 
-"case"		{return TOK_CASE}
+"case"		{return TOK_CASE;}
 
 "int"         	{ return TOK_TYPEINT ; }
 
@@ -99,6 +100,18 @@ variable_arithmetique ([[:alnum:]])*
 "<<"       	{return TOK_DECG;}
 
 "\n"            {lineno++;}
+
+
+
+<INITIAL>{
+	"/*"  				{  BEGIN(IN_COMMENT); }
+}
+<IN_COMMENT>{
+	"*/"  				{ BEGIN(INITIAL); }
+	[^*\n]+             // eat comment in chunks
+	"*"                 // eat the lone star
+	\n                  yylineno++;
+}
 
 {variable_booleenne} {
     yylval.texte = yytext;

@@ -2,7 +2,7 @@
 
 flex -o ANSI-C.c ANSI-C.l
 bison -d cfe.y
-gcc ANSI-C.c cfe.tab.c generation_code.c pkg-config --cflags --libs glib-2.0 -o mongcc
+gcc ANSI-C.c cfe.tab.c generation_code.c `pkg-config --cflags --libs glib-2.0` -o mongcc
 echo "" > a.tmp
 
 for testfile in ./Tests/*.c; do
@@ -13,6 +13,6 @@ for testfile in ./Tests/*.c; do
 done
 
 rm programme.tmp
-echo "___________________________________"
+echo "_____________________________________"
 cat a.tmp
-
+rm a.tmp
