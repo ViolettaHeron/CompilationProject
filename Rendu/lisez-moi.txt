@@ -1,0 +1,23 @@
+Nous avons choisi d'installer la librairie GLib, pour l'analyse sémantique.
+Commande pour l'installer:
+sudo apt-get install libglib2.0-dev
+
+Nous avons un fichier d'entête "simple.h" commun aux deux fichiers (flex et yacc) pour récupérer les tokens,et les inclusion utiles
+
+On utilise un arbre n-aire avec GLib, pour notre arbre syntaxique qui contient les séquences de code entrées par l'utilisateur.
+
+Puis nous avons le fichier genration_code.c. C'est le programme de génération de code cbe :
+ 
+pour executer 
+flex -o ANSI-C.c ANSI-C.l
+bison -d cfe.y
+gcc ANSI-C.c cfe.tab.c generation_code.c `pkg-config --cflags --libs glib-2.0` -o mongcc
+./mongcc add.c
+
+Notre projet reussi 12 tests sur les 17.
+Seul les tests functions.c , switch.c , tableaux.c , tableaux-multi.c et variables.c ne passent pas.
+Notre projet prend en compte les variables non declarées, sinon un message d'erreur au moment de la compilation.  
+ 
+Pour une execution rapide 
+chmod 777 run.sh
+./run.sh
